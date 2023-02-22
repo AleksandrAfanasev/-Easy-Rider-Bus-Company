@@ -10,3 +10,5 @@ content:
 - Groups and alternations
 - Tokenization
 - Regexps in programs
+- Itertools module
+- Sorting a list
