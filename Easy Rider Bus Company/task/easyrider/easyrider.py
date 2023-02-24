@@ -15,49 +15,47 @@ for i in range(len(data)):
     if data[i].get("bus_id") == 1024:
         lines[3].append(data[i])
 
-cnt = 0
+transfer_stops = []
+start_end_stops = set()
 
-print('Arrival time test:')
+print('On demand stops test:')
 
 if len(lines[0]) > 0:
     i = 0
-    for i in range(0, len(lines[0]) - 1):
-        if lines[0][i + 1].get("a_time") < lines[0][i].get("a_time"):
-            print('bus_id line 128: wrong time on station', lines[0][i + 1].get("stop_name"))
-            cnt += 1
-            break
+    for i in range(0, len(lines[0])):
+        if lines[0][i].get("stop_type") in ["S", "F", '']:
+            start_end_stops.add(lines[0][i].get("stop_name"))
         else:
-            continue
+            transfer_stops.append(lines[0][i].get("stop_name"))
 
 if len(lines[1]) > 0:
     i = 0
-    for i in range(0, len(lines[1]) - 1):
-        if lines[1][i + 1].get("a_time") < lines[1][i].get("a_time"):
-            print('bus_id line 256: wrong time on station', lines[1][i + 1].get("stop_name"))
-            cnt += 1
-            break
+    for i in range(0, len(lines[1])):
+        if lines[1][i].get("stop_type") in ["S", "F", '']:
+            start_end_stops.add(lines[1][i].get("stop_name"))
         else:
-            continue
+            transfer_stops.append(lines[1][i].get("stop_name"))
 
 if len(lines[2]) > 0:
     i = 0
-    for i in range(0, len(lines[2]) - 1):
-        if lines[2][i + 1].get("a_time") < lines[2][i].get("a_time"):
-            print('bus_id line 512: wrong time on station', lines[2][i + 1].get("stop_name"))
-            cnt += 1
-            break
+    for i in range(0, len(lines[2])):
+        if lines[2][i].get("stop_type") in ["S", "F", '']:
+            start_end_stops.add(lines[2][i].get("stop_name"))
         else:
-            continue
+            transfer_stops.append(lines[2][i].get("stop_name"))
 
 if len(lines[3]) > 0:
     i = 0
-    for i in range(0, len(lines[3]) - 1):
-        if lines[3][i + 1].get("a_time") < lines[3][i].get("a_time"):
-            print('bus_id line 1024: wrong time on station', lines[3][i + 1].get("stop_name"))
-            cnt += 1
-            break
+    for i in range(0, len(lines[3])):
+        if lines[3][i].get("stop_type") in ["S", "F", '']:
+            start_end_stops.add(lines[3][i].get("stop_name"))
         else:
-            continue
+            transfer_stops.append(lines[3][i].get("stop_name"))
 
-if cnt == 0:
+transfer_stops = set(transfer_stops)
+wrong_stops = transfer_stops.intersection(start_end_stops)
+
+if len(wrong_stops) == 0:
     print('OK')
+else:
+    print('Wrong stop type:', sorted(list(wrong_stops)))
